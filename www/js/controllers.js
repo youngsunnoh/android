@@ -1,28 +1,23 @@
-angular.module('starter.controllers', [])
+'use strict';
 
-.controller('DashCtrl', function($scope) {})
-
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
-})
-
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
-
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-});
+angular.module('myApp.controllers', [])
+    .controller('MainCtrl', ['$scope', '$rootScope', '$window', '$location', function ($scope, $rootScope, $window, $location) {
+        $scope.slide = '';
+        $rootScope.back = function() {
+          $scope.slide = 'slide-right';
+          $window.history.back();
+        }
+        $rootScope.go = function(path){
+          $scope.slide = 'slide-left';
+          $location.url(path);
+        }
+    }])
+    .controller('EmployeeListCtrl', ['$scope', 'Employee', function ($scope, Employee) {
+        $scope.employees = Employee.query();
+    }])
+    .controller('EmployeeDetailCtrl', ['$scope', '$routeParams', 'Employee', function ($scope, $routeParams, Employee) {
+        $scope.employee = Employee.get({employeeId: $routeParams.employeeId});
+    }])
+    .controller('ReportListCtrl', ['$scope', '$routeParams', 'Report', function ($scope, $routeParams, Report) {
+        $scope.employees = Report.query({employeeId: $routeParams.employeeId});
+    }]);
